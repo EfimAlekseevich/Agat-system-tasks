@@ -4,31 +4,26 @@
 
 #include "Headers/file.h"
 
-#define MAX_LEN_ARGS 1024 //8191
 
-
-FILE* open_file(char* path, char* filename, char* mode)
+FILE* open_file(char* filename, char* mode)
 {
-	char* path_name[MAX_LEN_ARGS];
-	strcpy(path_name, path);
-	strcat(path_name, filename);
-
 	FILE* file;
 
-	if ((file = fopen(path_name, mode)) == NULL)
-		printf("Error opening file '%s'.", path_name);
+	if ((file = fopen(filename, mode)) == NULL)
+		printf("Error opening file '%s'.", filename);
 	else
 		return file;
 	return NULL;
 	
 }
 
-uint64_t filesize(char* path, char* filename)
+uint64_t filesize(char* filename)
 {
 	uint64_t size = 0;
 
 	FILE* file;
-	if (file = open_file(path, filename, "r") != NULL)
+
+	if ((file = open_file(filename, "r")) != NULL)
 	{
 		fseek(file, 0, SEEK_END);
 		size = ftell(file);
