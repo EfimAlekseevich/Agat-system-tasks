@@ -20,10 +20,3 @@ void print_array(uint8_t* array, uint32_t len)
 		printf("%d ", array[i]);
 	printf("\n");
 }
-
-
-uint32_t sum(uint32_t a, uint32_t b)
-{
-	printf("%d %d  ", a, b);
-	return a + b;
-}

@@ -8,6 +8,7 @@
 #include "Efi_libs/Headers/std.h"
 #include "Efi_libs/Headers/str.h"
 #include "Efi_libs/Headers/file.h"
+#include "Efi_libs/Headers/utils.h"
 
 
 void task_1()
@@ -32,9 +33,9 @@ void task_2(int num_args, char* args[])
 }
 
 
+
 void task_3(int num_args, char* args[])
 {
-	// Util - Дополнительная фича, отображает прогресс считывания файла
 
 	#define BUFFER_SIZE 1024
 	#define NUM_SYMBOLS 256
@@ -46,55 +47,44 @@ void task_3(int num_args, char* args[])
 	uint16_t i;
 
 	char* buffer = (char*)malloc(BUFFER_SIZE + 1);
-	uint32_t* stats[NUM_SYMBOLS]; for (i = 0; i < NUM_SYMBOLS; stats[i++] = (uint32_t)0);
+	uint32_t stats[NUM_SYMBOLS]; memset(stats, 0, NUM_SYMBOLS*4);
 		
-	// Util
 	uint64_t progress_bytes = 0;
 	uint64_t file_size = filesize(args[1]);
-	uint8_t slots, num_slots = 50;
-	// Util
+	uint8_t progress_slots, visible_slots = 0, max_slots = 40;
+	char progress[64]; memset(progress, ' ', 64);
+	sprintf(progress, "Progress: ");
 
 	readable_file = open_file(args[1], "r");
-	stat_file = open_file("stat_file.txt", "w");
+	stat_file = open_file("stat_file.txt", "w"); if (stat_file == NULL) exit(0);
 
 	printf("File '%s' (%lld bytes) is open.\n", args[1], file_size);
 
-	
 	while (feof(readable_file) == 0)
 	{
 		fgets(buffer, BUFFER_SIZE, readable_file);
-
 		i = 0;
-		while (i < BUFFER_SIZE && buffer[i] != '\0')
+		while (i < BUFFER_SIZE)
 		{
-			stats[(uint8_t)buffer[i]]++;
+			stats[(uint8_t)buffer[i++]]++;
 			progress_bytes++;
-			i++;
+			if (buffer[i] == '\0')
+				break;
 		}
 
-		// Util
-		printf("Progress: ");
-		slots = progress_bytes * num_slots / file_size;
-		for (uint8_t slot = 0; slot < slots ; slot++)
-			printf("%c", (char)35);
-		printf(" %f %%\r", ((float)progress_bytes * 100 / file_size));
-		// Util
+		progress_slots = (float)progress_bytes * max_slots / file_size;
+		show_progress(progress, visible_slots, progress_slots, 10, (float)progress_bytes * 100 / file_size);
 	}
-	// Util
-	printf("Finish  : ");
-	for (uint8_t slot = 0; slot < num_slots; slot++)
-		printf("%c", (char)35);
-	printf(" 100 %%                                                                           \n\n");
-	// Util
 
-	//for (i = 0; i < NUM_SYMBOLS; printf("%c  ---  %p \n", (char)i, stats[i++]));
+	finish_progress(progress, max_slots, 10);
 	fclose(readable_file);
 	free(buffer);
+
 	for (i = 224; i < 256; i++)
 		fprintf(stat_file, "%9c%c", (char)i, (char)(i - 32));
 	fprintf(stat_file, "\n");
 	for (i = 224; i < 256; i++)
-		fprintf(stat_file, "%10d", sum(stats[i], stats[i-32]));
+		fprintf(stat_file, "%10ld", stats[i] + stats[i-32]);
 
 	fclose(stat_file);
 }
