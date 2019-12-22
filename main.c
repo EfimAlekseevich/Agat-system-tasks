@@ -33,7 +33,6 @@ void task_2(int num_args, char* args[])
 }
 
 
-
 void task_3(int num_args, char* args[])
 {
 
@@ -47,16 +46,21 @@ void task_3(int num_args, char* args[])
 	uint16_t i;
 
 	char* buffer = (char*)malloc(BUFFER_SIZE + 1);
-	uint32_t stats[NUM_SYMBOLS]; memset(stats, 0, NUM_SYMBOLS*4);
+	uint32_t stats[NUM_SYMBOLS];
+	memset(stats, 0, NUM_SYMBOLS*sizeof(uint32_t));
 		
 	uint64_t progress_bytes = 0;
 	uint64_t file_size = filesize(args[1]);
 	uint8_t progress_slots, visible_slots = 0, max_slots = 40;
-	char progress[64]; memset(progress, ' ', 64);
+	char progress[64];
+	memset(progress, ' ', 64);
 	sprintf(progress, "Progress: ");
 
 	readable_file = open_file(args[1], "r");
-	stat_file = open_file("stat_file.txt", "w"); if (stat_file == NULL) exit(0);
+	strcpy(buffer, args[1]);
+	strcat(buffer, "__stat.txt");
+	stat_file = open_file(buffer, "w");
+	if (stat_file == NULL) exit(0);
 
 	printf("File '%s' (%lld bytes) is open.\n", args[1], file_size);
 
