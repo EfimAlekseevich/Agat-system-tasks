@@ -57,10 +57,6 @@ void task_3(int num_args, char* args[])
 	sprintf(progress, "Progress: ");
 
 	readable_file = open_file(args[1], "r");
-	strcpy(buffer, args[1]);
-	strcat(buffer, "__stat.txt");
-	stat_file = open_file(buffer, "w");
-	if (stat_file == NULL) exit(0);
 
 	printf("File '%s' (%lld bytes) is open.\n", args[1], file_size);
 
@@ -68,12 +64,12 @@ void task_3(int num_args, char* args[])
 	{
 		fgets(buffer, BUFFER_SIZE, readable_file);
 		i = 0;
-		while (i < BUFFER_SIZE)
+		while (buffer[i] != '\0')
 		{
 			stats[(uint8_t)buffer[i++]]++;
 			progress_bytes++;
-			if (buffer[i] == '\0')
-				break;
+			if (buffer[i] == '\n')
+				progress_bytes++;
 		}
 
 		progress_slots = (float)progress_bytes * max_slots / file_size;
@@ -82,11 +78,16 @@ void task_3(int num_args, char* args[])
 
 	finish_progress(progress, max_slots, 10);
 	fclose(readable_file);
+
+	strcpy(buffer, args[1]);
+	strcat(buffer, "__stat.txt");
+	stat_file = open_file(buffer, "w");
 	free(buffer);
+	if (stat_file == NULL) exit(0);
 
 	for (i = 224; i < 256; i++)
 		fprintf(stat_file, "%9c%c", (char)i, (char)(i - 32));
-	fprintf(stat_file, "\n");
+	fprintf(stat_file, "\r\n");
 	for (i = 224; i < 256; i++)
 		fprintf(stat_file, "%10ld", stats[i] + stats[i-32]);
 
@@ -98,6 +99,13 @@ int main(int num_args, char* args[])
 {
 	//task_1();
 	//task_2(num_args, args);
-	task_3(num_args, args);
+	//task_3(num_args, args);
+	uint16_t array[1024];
+	srand(0);
+	for (uint16_t i = 0; i < 1024; i++) array[i] = rand();
+	print_array(array, 1024);
+	printf("\r\n");
+	uint64_t max_i = max_index(array, 1024);
+	printf("%lld", max_i);
 	return 1;
 }
