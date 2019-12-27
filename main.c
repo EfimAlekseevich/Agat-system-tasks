@@ -9,6 +9,7 @@
 #include "Efi_libs/Headers/str.h"
 #include "Efi_libs/Headers/file.h"
 #include "Efi_libs/Headers/utils.h"
+#include "Efi_libs/Headers/dsp.h"
 
 
 void task_1()
@@ -100,12 +101,13 @@ int main(int num_args, char* args[])
 	//task_1();
 	//task_2(num_args, args);
 	//task_3(num_args, args);
-	uint16_t array[1024];
-	srand(0);
-	for (uint16_t i = 0; i < 1024; i++) array[i] = rand();
-	print_array(array, 1024);
-	printf("\r\n");
-	uint64_t max_i = max_index(array, 1024);
-	printf("%lld", max_i);
+	int16_t seq_1[256], seq_2[256];
+	srand(5);
+	for (uint16_t i = 0; i < 256; i++)
+	{
+		seq_1[i] = rand();
+		seq_2[i] = rand();
+	}
+	printf("%f ", cross_correlation(seq_1, seq_2, 256));
 	return 1;
 }

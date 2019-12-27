@@ -22,9 +22,9 @@ void print_array(uint16_t* array, uint64_t len)
 }
 
 
-uint64_t max_index(uint16_t* array, uint64_t len)
+uint64_t max_index(int16_t* array, int64_t len)
 {
-	uint64_t index = 1, max_index = 0;
+	uint64_t index = 0, max_index = 0;
 
 	while (++index < len)
 		if (array[index] > array[max_index])
