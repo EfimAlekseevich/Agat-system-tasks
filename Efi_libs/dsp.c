@@ -5,20 +5,29 @@
 #include "Headers/dsp.h"
 
 
-float cross_correlation(int16_t* seq_1, int16_t* seq_2, uint32_t len)
+uint64_t get_absolute_correlation(Discrete_signal * long_s, Discrete_signal * short_s, uint32_t shift)
 {
-	int64_t cross_corr = 0, auto_corr_1 = 0, auto_corr_2 = 0;
-	uint32_t i = 0;
+	int64_t corr = 0;
 
-	while (i++ < len)
+	for (uint32_t i = 0; i < short_s->len; i++)
+		corr += (int64_t)short_s->sequence[i] * long_s->sequence[i+shift];
+
+	return corr;
+}
+
+
+void get_absolute_correlations(Discrete_signal * s1, Discrete_signal * s2, uint16_t * correlations)
+{
+	Discrete_signal *long_s = s1, *short_s = s2;
+
+	if (s1->len < s2->len)
 	{
-		cross_corr += (int64_t)seq_1[i] * seq_2[i];
-		auto_corr_1 += (int64_t)seq_1[i] * seq_1[i];
-		auto_corr_2 += (int64_t)seq_2[i] * seq_2[i];
+		long_s = s2;
+		short_s = s1;
 	}
 
-	//printf("%lld  %lld  %lld  ", cross_corr, auto_corr_1, auto_corr_2);
-	float norm_cross_correlation = (double)cross_corr / sqrt(auto_corr_1) / sqrt(auto_corr_2);
+	uint32_t shifts = long_s->len - short_s->len + 1;
 
-	return norm_cross_correlation;
+	for (uint32_t shift = 0; shift < shifts; shift++)
+		correlations[shift] = get_absolute_correlation(long_s, short_s, shift) / short_s->len;
 }

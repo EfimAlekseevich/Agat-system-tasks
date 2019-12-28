@@ -101,13 +101,24 @@ int main(int num_args, char* args[])
 	//task_1();
 	//task_2(num_args, args);
 	//task_3(num_args, args);
-	int16_t seq_1[256], seq_2[256];
-	srand(5);
-	for (uint16_t i = 0; i < 256; i++)
+	
+	
+	#define LEN1 4
+	#define LEN2 8
+	
+	int16_t seq_1[LEN1] = { -10, 10, 10, -10 }, seq_2[LEN2] = { 1, -2, 3, -9, 11, 9, -8, 0};
+	Discrete_signal s1 = { LEN1, seq_1, 2 }, s2 = { LEN2, seq_2, 2 };
+	/*srand(1);
+	for (uint16_t i = 0; i < LEN1; i++)
+		seq_1[i] = randint(0, 100);
+	for (uint16_t i = 0; i < LEN2; i++)
+		seq_2[i] = randint(0, 100);*/
+
+	int16_t * correlations = (int16_t*)malloc(abs(LEN1-LEN2)+1);
+	get_absolute_correlations(&s1, &s2, correlations);
+	for (uint16_t i = 0; i < abs(LEN1-LEN2)+1; i++)
 	{
-		seq_1[i] = rand();
-		seq_2[i] = rand();
+		printf("%d ", correlations[i]);
 	}
-	printf("%f ", cross_correlation(seq_1, seq_2, 256));
 	return 1;
 }

@@ -8,7 +8,7 @@
 int64_t randint(int64_t min, int64_t max)
 {
 	int64_t range = abs(max - min);
-	double rand_koef = rand() / (double)RAND_MAX;
+	double rand_koef = (double)rand() / RAND_MAX;
 	int64_t random = rand_koef * range + min;
 	return random;
 }
@@ -22,7 +22,7 @@ void print_array(uint16_t* array, uint64_t len)
 }
 
 
-uint64_t max_index(int16_t* array, int64_t len)
+uint64_t max_index(int16_t *array, uint64_t len)
 {
 	uint64_t index = 0, max_index = 0;
 
