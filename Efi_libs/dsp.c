@@ -4,7 +4,7 @@
 #include "Headers/std.h"
 
 
-uint64_t get_absolute_correlation(Discrete_signal * long_s, Discrete_signal * short_s, uint32_t shift)
+int64_t get_absolute_correlation(Discrete_signal * long_s, Discrete_signal * short_s, uint32_t shift)
 {
 	int64_t corr = 0;
 
@@ -25,7 +25,7 @@ void get_long_short(Discrete_signal* s1, Discrete_signal* s2, Discrete_signal** 
 }
 
 
-void get_absolute_correlations(Discrete_signal * s1, Discrete_signal * s2, uint16_t * correlations)
+void get_absolute_correlations(Discrete_signal * s1, Discrete_signal * s2, int16_t * correlations)
 {
 	Discrete_signal * long_s = s1;
 	Discrete_signal * short_s = s2;
@@ -38,11 +38,12 @@ void get_absolute_correlations(Discrete_signal * s1, Discrete_signal * s2, uint1
 }
 
 
-void get_convolution(Discrete_signal* s1, Discrete_signal* s2, uint16_t* convolution)
+void get_convolution(Discrete_signal* s1, Discrete_signal* s2, int16_t* convolution)
 {
 	Discrete_signal * long_s = s1;
 	Discrete_signal * short_s = s2;
 	get_long_short(s1, s2, &long_s, &short_s);
+
 	reverse(short_s->sequence, short_s->len);
 	get_absolute_correlations(long_s, short_s, convolution);
 }
