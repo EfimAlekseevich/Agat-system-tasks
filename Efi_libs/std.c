@@ -14,7 +14,7 @@ int64_t randint(int64_t min, int64_t max)
 }
 
 
-void print_array(uint16_t* array, uint64_t len)
+void print_array(uint16_t * array, uint64_t len)
 {
 	for (uint32_t i = 0; i < len; i++)
 		printf("%d ", array[i]);
@@ -22,7 +22,7 @@ void print_array(uint16_t* array, uint64_t len)
 }
 
 
-uint64_t max_index(int16_t *array, uint64_t len)
+uint64_t max_index(int16_t * array, uint64_t len)
 {
 	uint64_t index = 0, max_index = 0;
 
@@ -31,4 +31,19 @@ uint64_t max_index(int16_t *array, uint64_t len)
 			max_index = index;
 		
 	return max_index;
+}
+
+
+int16_t * reverse(int16_t * array, uint32_t len)
+{
+	int16_t temp;
+
+	for (uint32_t i = 0; i < len / 2; i++)
+	{
+		temp = array[i];
+		array[i] = array[len - i - 1];
+		array[len - i - 1] = temp;
+	}
+
+	return array;
 }

@@ -106,8 +106,9 @@ int main(int num_args, char* args[])
 	#define LEN1 4
 	#define LEN2 8
 	
-	int16_t seq_1[LEN1] = { -10, 10, 10, -10 }, seq_2[LEN2] = { 1, -2, 3, -9, 11, 9, -8, 0};
+	int16_t seq_1[LEN1] = { -10, 0, 10, -10 }, seq_2[LEN2] = { 1, -2, 3, -10, 0, 10, -10, 0};
 	Discrete_signal s1 = { LEN1, seq_1, 2 }, s2 = { LEN2, seq_2, 2 };
+
 	/*srand(1);
 	for (uint16_t i = 0; i < LEN1; i++)
 		seq_1[i] = randint(0, 100);
