@@ -103,11 +103,11 @@ int main(int num_args, char* args[])
 	//task_3(num_args, args);
 	
 	
-	#define LEN1 4
-	#define LEN2 8
+	#define LEN1 8
+	#define LEN2 4
 	
-	int16_t seq_1[LEN1] = { -10, 0, 10, -10 }, seq_2[LEN2] = { 1, -2, 3, -10, 0, 10, -10, 0};
-	Discrete_signal s1 = { LEN1, seq_1, 2 }, s2 = { LEN2, seq_2, 2 };
+	int16_t seq_1[LEN1] = { 1, -2, 3, -10, 0, 10, -10, 0 }, seq_2[LEN2] = { -10, 0, 10, -10 };
+	
 
 	/*srand(1);
 	for (uint16_t i = 0; i < LEN1; i++)
@@ -115,11 +115,14 @@ int main(int num_args, char* args[])
 	for (uint16_t i = 0; i < LEN2; i++)
 		seq_2[i] = randint(0, 100);*/
 
-	int16_t * correlations = (int16_t*)malloc(abs(LEN1-LEN2)+1);
-	get_absolute_correlations(&s1, &s2, correlations);
-	for (uint16_t i = 0; i < abs(LEN1-LEN2)+1; i++)
-	{
-		printf("%d ", correlations[i]);
-	}
+	int32_t * correlations = (int32_t*)malloc((abs(LEN1-LEN2)+1)*sizeof(int32_t));
+	if (correlations == NULL) exit(1);
+
+	get_convolution(seq_1, seq_2, LEN1, LEN2, correlations);
+
+	for (int16_t i = 0; i < abs(LEN1-LEN2)+1; i++)
+		printf("%ld ", correlations[i]);
+
+	free(correlations);
 	return 1;
 }
