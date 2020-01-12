@@ -105,3 +105,25 @@ void MainWindow::show_result(double result)
     QString str_result = QString::number(result,'f', 6);
     ui->display->setText(str_result);
 }
+
+void MainWindow::on_b_save_clicked()
+{
+    if (ui->saved_values->count() < 10)
+        ui->saved_values->addItem(ui->display->text());
+    else
+        ui->statusbar->showMessage("Max number of saved numbers!!!");
+}
+
+
+void MainWindow::on_saved_values_itemDoubleClicked(QListWidgetItem *item)
+{
+    ui->display->setText(item->text());
+}
+
+void MainWindow::on_pl_mi_clicked()
+{
+    if (ui->display->text()[0] == '-')
+        ui->display->setText(ui->display->text().remove(0,1));
+    else
+        ui->display->setText(ui->display->text().insert(0, '-'));
+}

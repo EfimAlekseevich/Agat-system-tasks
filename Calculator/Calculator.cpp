@@ -52,6 +52,7 @@ void Calculator::equal(QString str_number)
     double number = str_number.toDouble();
     if (number == 0 && operation == '/')
         emit div_by_zero();
+    else if (number <= 1 && operation == '^' && in_memory < 0){}
     else
     {
         double result = decide(number);

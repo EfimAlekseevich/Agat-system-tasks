@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "QListWidgetItem"
 #include "QString"
 
 QT_BEGIN_NAMESPACE
@@ -29,6 +30,13 @@ private slots:
 
     void div_by_zero();
     void show_result(double result);
+
+    void on_b_save_clicked();
+
+    void on_saved_values_itemDoubleClicked(QListWidgetItem *item);
+
+
+    void on_pl_mi_clicked();
 
 signals:
     void change_operation(QString operation, QString number);
