@@ -1,5 +1,6 @@
 #include "calculator.h"
 #include "QString"
+#include "QPushButton"
 #include <cmath>
 
 
@@ -15,31 +16,45 @@ void Calculator::set_in_memory(double number)
 }
 
 
-double Calculator::decide(char operation, double number)
+char Calculator::get_operation()
+{
+    return operation;
+}
+
+
+void Calculator::set_operation(QString new_operation, QString str_number)
+{
+     operation = (char)new_operation[0].unicode();
+     in_memory = str_number.toDouble();
+}
+
+
+double Calculator::decide(double number)
 {
     double result = 0;
     switch (operation)
     {
-    case '+': result = number + in_memory;break;
-    case '-': result = number - in_memory;break;
-    case '*': result = number * in_memory;break;
-    case '/': result = number / in_memory;break;
-    case '^': result = pow(number,in_memory);break;
-    default:
-        break;
+        case '+': result = in_memory + number;break;
+        case '-': result = in_memory - number;break;
+        case '*': result = in_memory * number;break;
+        case '/': result = in_memory / number;break;
+        case '^': result = pow(in_memory,number);break;
+        default:
+            break;
     }
 
     return result;
 }
 
 
-void Calculator::operation()
+void Calculator::equal(QString str_number)
 {
-
-}
-
-
-void Calculator::equal()
-{
-
+    double number = str_number.toDouble();
+    if (number == 0 && operation == '/')
+        emit div_by_zero();
+    else
+    {
+        double result = decide(number);
+        emit show_result(result);
+    }
 }

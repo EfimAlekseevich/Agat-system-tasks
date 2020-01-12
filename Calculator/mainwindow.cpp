@@ -19,6 +19,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->b_d7, SIGNAL(clicked()), this, SLOT(on_button_digit_clicked()));
     connect(ui->b_d8, SIGNAL(clicked()), this, SLOT(on_button_digit_clicked()));
     connect(ui->b_d9, SIGNAL(clicked()), this, SLOT(on_button_digit_clicked()));
+
+    connect(ui->b_plus, SIGNAL(clicked()), this, SLOT(on_operation_clicked()));
+    connect(ui->b_minus, SIGNAL(clicked()), this, SLOT(on_operation_clicked()));
+    connect(ui->b_mult, SIGNAL(clicked()), this, SLOT(on_operation_clicked()));
+    connect(ui->b_div, SIGNAL(clicked()), this, SLOT(on_operation_clicked()));
+    connect(ui->b_pow, SIGNAL(clicked()), this, SLOT(on_operation_clicked()));
+
 }
 
 MainWindow::~MainWindow()
@@ -58,6 +65,43 @@ void MainWindow::on_b_clear_clicked()
 void MainWindow::on_b_dot_clicked()
 {
     if (is_short(ui->display->text()))
-        if (ui->display->text().indexOf('.') == -1)
+        if (!ui->display->text().contains('.'))
             ui->display->setText(ui->display->text() + ".");
+}
+
+
+void MainWindow::on_b_del_clicked()
+{
+    if (ui->display->text().length() > 1)
+        ui->display->setText(ui->display->text().chopped(1));
+    else
+        ui->display->setText("0");
+}
+
+
+void MainWindow::on_operation_clicked()
+{
+     QString operation = ((QPushButton *)sender())->text();
+     ui->operation->setText((QString)operation[0]);
+     ui->label_memory->setText(ui->display->text());
+     emit change_operation(operation, ui->display->text());
+     ui->display->setText("0");
+}
+
+void MainWindow::on_b_equal_clicked()
+{
+    emit calc_equal(ui->display->text());
+}
+
+
+void MainWindow::div_by_zero()
+{
+    ui->statusbar->showMessage("Dividing by zero!!!");
+}
+
+
+void MainWindow::show_result(double result)
+{
+    QString str_result = QString::number(result,'f', 6);
+    ui->display->setText(str_result);
 }
