@@ -45,13 +45,14 @@ bool MainWindow::is_short(QString str)
 
 void MainWindow::on_button_digit_clicked()
 {
-    if (is_short(ui->display->text()))
+    QString display_text = ui->display->text();
+    if (is_short(display_text))
     {
         QString digit = ((QPushButton *)sender())->text();
-        if (ui->display->text() == "0")
+        if (display_text == "0")
             ui->display->setText(digit);
         else
-            ui->display->setText(ui->display->text() + digit);
+            ui->display->setText(display_text + digit);
     }
 }
 
@@ -64,9 +65,10 @@ void MainWindow::on_b_clear_clicked()
 
 void MainWindow::on_b_dot_clicked()
 {
-    if (is_short(ui->display->text()))
-        if (!ui->display->text().contains('.'))
-            ui->display->setText(ui->display->text() + ".");
+    QString display_text = ui->display->text();
+    if (is_short(display_text))
+        if (!display_text.contains('.'))
+            ui->display->setText(display_text + ".");
 }
 
 
@@ -102,7 +104,11 @@ void MainWindow::div_by_zero()
 
 void MainWindow::show_result(double result)
 {
-    QString str_result = QString::number(result,'f', 6);
+    QString str_result = QString::number(result,'f');
+    while(str_result[str_result.length()-1] == '0')
+        str_result.chop(1);
+    if (str_result[str_result.length()-1] == '.')
+        str_result.chop(1);
     ui->display->setText(str_result);
 }
 
@@ -122,8 +128,9 @@ void MainWindow::on_saved_values_itemDoubleClicked(QListWidgetItem *item)
 
 void MainWindow::on_pl_mi_clicked()
 {
-    if (ui->display->text()[0] == '-')
-        ui->display->setText(ui->display->text().remove(0,1));
+    QString display_text = ui->display->text();
+    if (display_text[0] == '-')
+        ui->display->setText(display_text.remove(0,1));
     else
-        ui->display->setText(ui->display->text().insert(0, '-'));
+        ui->display->setText(display_text.insert(0, '-'));
 }

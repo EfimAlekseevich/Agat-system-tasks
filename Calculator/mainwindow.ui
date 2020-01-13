@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>238</width>
+    <width>334</width>
     <height>376</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -24,8 +24,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>238</width>
-    <height>376</height>
+    <width>700</width>
+    <height>1000</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -43,7 +43,7 @@
      <rect>
       <x>10</x>
       <y>120</y>
-      <width>161</width>
+      <width>242</width>
       <height>201</height>
      </rect>
     </property>
@@ -85,11 +85,14 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>4</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="3" column="1">
@@ -111,7 +114,7 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>.</string>
@@ -137,11 +140,14 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>6</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="2" column="0">
@@ -163,11 +169,14 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>1</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="2" column="1">
@@ -189,11 +198,14 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>2</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="3" column="0">
@@ -215,11 +227,14 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>0</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="0" column="0">
@@ -241,11 +256,14 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>7</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="0" column="2">
@@ -267,11 +285,14 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>9</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="3" column="2">
@@ -293,9 +314,9 @@
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(170, 255, 0);
+        <string notr="true">background-color: rgb(170, 85, 255);
 color: rgb(0, 0, 0);
-border-color: rgb(0, 0, 0);</string>
+</string>
        </property>
        <property name="text">
         <string>=</string>
@@ -321,11 +342,14 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>8</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="2" column="2">
@@ -347,11 +371,14 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>3</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
      <item row="1" column="1">
@@ -373,11 +400,14 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>5</string>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -385,9 +415,9 @@ border-color: rgb(0, 0, 0);</string>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>250</x>
       <y>120</y>
-      <width>51</width>
+      <width>82</width>
       <height>201</height>
      </rect>
     </property>
@@ -423,7 +453,7 @@ border-color: rgb(0, 0, 0);</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 0, 0);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(234, 10, 10, 255), stop:0.241573 rgba(198, 74, 23, 255), stop:0.438202 rgba(150, 32, 32, 255), stop:0.657303 rgba(182, 41, 41, 255), stop:1 rgba(193, 94, 94, 255));</string>
        </property>
        <property name="text">
         <string>/</string>
@@ -449,7 +479,7 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 0, 0);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(234, 10, 10, 255), stop:0.241573 rgba(198, 74, 23, 255), stop:0.438202 rgba(150, 32, 32, 255), stop:0.657303 rgba(182, 41, 41, 255), stop:1 rgba(193, 94, 94, 255));</string>
        </property>
        <property name="text">
         <string>*</string>
@@ -475,7 +505,7 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 0, 0);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(234, 10, 10, 255), stop:0.241573 rgba(198, 74, 23, 255), stop:0.438202 rgba(150, 32, 32, 255), stop:0.657303 rgba(182, 41, 41, 255), stop:1 rgba(193, 94, 94, 255));</string>
        </property>
        <property name="text">
         <string>-</string>
@@ -501,7 +531,7 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 0, 0);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(234, 10, 10, 255), stop:0.241573 rgba(198, 74, 23, 255), stop:0.438202 rgba(150, 32, 32, 255), stop:0.657303 rgba(182, 41, 41, 255), stop:1 rgba(193, 94, 94, 255));</string>
        </property>
        <property name="text">
         <string>+</string>
@@ -515,7 +545,7 @@ border-color: rgb(0, 0, 0);</string>
      <rect>
       <x>10</x>
       <y>70</y>
-      <width>211</width>
+      <width>322</width>
       <height>41</height>
      </rect>
     </property>
@@ -554,7 +584,7 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>CLEAR</string>
@@ -580,7 +610,7 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>&lt;--</string>
@@ -606,7 +636,7 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 0, 255);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(10, 16, 234, 255), stop:0.241573 rgba(68, 23, 198, 255), stop:0.438202 rgba(32, 150, 134, 255), stop:0.657303 rgba(41, 57, 182, 255), stop:1 rgba(94, 98, 193, 255));</string>
        </property>
        <property name="text">
         <string>SAVE</string>
@@ -632,7 +662,7 @@ border-color: rgb(0, 0, 0);</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 0, 0);</string>
+        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.664773, stop:0 rgba(234, 10, 10, 255), stop:0.241573 rgba(198, 74, 23, 255), stop:0.438202 rgba(150, 32, 32, 255), stop:0.657303 rgba(182, 41, 41, 255), stop:1 rgba(193, 94, 94, 255));</string>
        </property>
        <property name="text">
         <string>^</string>
@@ -646,7 +676,7 @@ border-color: rgb(0, 0, 0);</string>
      <rect>
       <x>110</x>
       <y>10</y>
-      <width>81</width>
+      <width>191</width>
       <height>20</height>
      </rect>
     </property>
@@ -670,7 +700,7 @@ border-color: rgb(0, 0, 0);</string>
      <rect>
       <x>80</x>
       <y>30</y>
-      <width>141</width>
+      <width>251</width>
       <height>31</height>
      </rect>
     </property>
@@ -735,7 +765,7 @@ border-color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="operation">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>310</x>
       <y>10</y>
       <width>16</width>
       <height>16</height>
@@ -778,7 +808,7 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>238</width>
+     <width>334</width>
      <height>21</height>
     </rect>
    </property>
@@ -839,4 +869,7 @@ background-color: rgb(255, 255, 255);</string>
  </tabstops>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>
