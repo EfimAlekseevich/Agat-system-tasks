@@ -9,13 +9,7 @@ SOURCES += \
         Efi_libs/std.c \
         Efi_libs/str.c \
         Efi_libs/utils.c \
-        main.c \
-        resources/pattern.c
-
-DISTFILES += \
-    data_file.txt \
-    real_rec.txt \
-    resources/real_rec.txt
+        main.c
 
 HEADERS += \
     Efi_libs/Headers/dsp.h \
@@ -23,3 +17,6 @@ HEADERS += \
     Efi_libs/Headers/std.h \
     Efi_libs/Headers/str.h \
     Efi_libs/Headers/utils.h
+
+DISTFILES += \
+    real_rec.txt
