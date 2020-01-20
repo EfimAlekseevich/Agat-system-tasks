@@ -15,41 +15,23 @@
 
 #define SAMPLING_FREQUENCY 24000
 #define RESOLUTION_TYPE int16_t
-#define BUFFER_SIZE 120
-
-
-enum units_of_time {S=1 , MS=1000, US=1000000};
-
-/*!
-Сдвигает все элементы массива влево на одну позицию
-\param[out] array Указатель на массив данных
-\param[in] len Длинна массива данных
-\return void Изменяет массив данных
-*/
-
-void left_shift(int16_t * array, uint32_t len)
-{
-    uint32_t i;
-    for (i=0; i<len-1; i++)
-        array[i] = array[i+1];
-}
+#define BUFFER_LEN 120
 
 
 /*!
-Загружает в буфер данные для начала обработки
+Заполняет буффер данными из файла
 \param[in] data_file Указатель на файл с данными
 \param[out] buffer Буфер для загрузки данных
 \param[in] len Длинна буфера
-\return void При успешной загрузки выводит в консоль об этом информацию
+\return Количество записанных элементов в буффер
 */
 
-void primary_load(FILE * data_file, int16_t * buffer, uint32_t len)
+uint32_t fill_buffer(FILE * data_file, int16_t * buffer, uint32_t buffer_len)
 {
-    uint32_t i;
-    for (i=1; i<len; i++)
-        fscanf(data_file, "%hd", &buffer[i]);
-
-    printf("Primary loading is completed.\r\n");
+    uint32_t i = 0;
+    while (i < buffer_len && feof(data_file) == 0)
+            fscanf(data_file, "%hd", &buffer[i++]);
+    return i;
 }
 
 
@@ -72,19 +54,16 @@ double get_coef_corr(const int16_t * buffer, const int16_t * sync, uint32_t len,
 }
 
 
-float position_to_time(uint32_t position, uint32_t units_of_time)
+double position_to_time(uint32_t position)
 {
-    return (double)position * units_of_time / SAMPLING_FREQUENCY;
+    return (double)position / SAMPLING_FREQUENCY;
 }
 
 
 void write_position(FILE * out_file, uint32_t position)
 {
-    float time = position_to_time(position - 121, MS);
-    if (time >= 1000)
-        fprintf(out_file,"%10.4fsec\n", time/1000);
-    else
-        fprintf(out_file,"%10.1fms \n", time);
+    double time = position_to_time(position);
+    fprintf(out_file,"%.6f \n", time);
 }
 
 
@@ -102,7 +81,7 @@ void delete_last_position(FILE * out_file)
  * Частота дискретизации файла - 24 кГц, 16 бит на отсчет.
  * Обработка ВЕДЕТСЯ БУФЕРАМИ ПО 5 МС (не понимаю почему нужно именно так???). (ГРУСТНЫЙ СМАЙЛИК)
  * 1 / 24 000 = 41,(6) мкс.
- * 5 мс --- 5 мс / 41,(6) мкс ~ 120 отсчётов.
+ * 5 мс >>---> 5 мс / 41,(6) мкс ~ 120 отсчётов.
 */
 
 
@@ -113,7 +92,7 @@ void delete_last_position(FILE * out_file)
 
 int main()
 {
-    const float sensivity  = 0.77;  // Чувствительность -- порог после которого мы считаем что это искомое совпадение.
+    const float sensivity_deviation  = 0.2;  // Максимально допустимое отклонение.
 
     const int16_t sync[] = {
       -170,  -233,  -281,  -309,  -318,  -312,  -300,  -290,  -287,  -290,  -294,  -291,  -278,  -256,
@@ -127,44 +106,36 @@ int main()
        290,   300,   312,   318,   309,   281,   233,   170}; // Синхронизирующий сигнал
 
     uint32_t sync_len = sizeof (sync) / sizeof (int16_t);
-    double sqrt_auto_corr = sqrt(get_absolute_correlation(sync, sync, sync_len, 0));
+    double auto_corr = get_absolute_correlation(sync, sync, sync_len, 0);
 
     FILE * data_file = open_file("real_rec.txt", "r"); if (data_file == NULL) exit(1);
     FILE * out_file = open_file("out.txt", "w"); if (out_file == NULL) fclose(data_file), exit(1);
 
+    int16_t * buffer = (int16_t *)malloc(BUFFER_LEN*(sizeof (int16_t)));
+    uint32_t filling;
+    uint32_t shift;
+    uint32_t sample = 0, point;
+    double corr;
 
-    int16_t * buffer = (int16_t *)malloc(BUFFER_SIZE*(sizeof (int16_t)));
-    uint32_t position = sync_len + 1;
-    uint32_t last_position = 0;
 
-    double last_corr = 0;
-    double coef_corr;
 
-    primary_load(data_file, buffer, BUFFER_SIZE);
-    while(feof(data_file) == 0)
+
+    while(filling = fill_buffer(data_file, buffer, BUFFER_LEN))
     {
-        left_shift(buffer, BUFFER_SIZE);
-        fscanf(data_file, "%hd", &buffer[BUFFER_SIZE-1]);
-        coef_corr = get_coef_corr(buffer, sync, sync_len, 0, sqrt_auto_corr);
+        point = 0;
+        uint32_t shifts = BUFFER_LEN - sync_len + 1;
 
-        if (coef_corr > sensivity)
+        for (shift=0; shift<shifts; shift++)
         {
-            if (position - last_position > 120)
+            corr = (double)get_absolute_correlation(buffer, sync, sync_len, shift) / auto_corr;
+            if (corr > 1-sensivity_deviation && corr < 1+sensivity_deviation)
             {
-                write_position(out_file, position);
-                last_position = position;
-                last_corr = coef_corr;
+               //printf("%d       %d \n", sample, point);
+               write_position(out_file, sample * BUFFER_LEN + point);
             }
-            else if (coef_corr > last_corr)
-            {
-                delete_last_position(out_file);
-                write_position(out_file, position);
-                last_position = position;
-                last_corr = coef_corr;
-            }
+            point++;
         }
-
-        position++;
+        sample++;
     }
 
     fclose(data_file);

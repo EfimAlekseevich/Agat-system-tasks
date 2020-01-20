@@ -32,7 +32,7 @@ void get_convolution( const int16_t * long_s, const int16_t * short_s, uint32_t 
 }
 
 
-double get_mutual_correlation_coefficient( const int16_t * long_s, const int16_t * short_s, uint32_t short_len, uint32_t shift)
+double get_normal_correlation_coefficient( const int16_t * long_s, const int16_t * short_s, uint32_t short_len, uint32_t shift)
 {
     double coef = (double)get_absolute_correlation(long_s, short_s, short_len, shift) /
                   sqrt(get_absolute_correlation(long_s, long_s, short_len, shift)) /
