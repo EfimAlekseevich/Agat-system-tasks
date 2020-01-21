@@ -24,7 +24,7 @@ void print_array(int16_t * array, uint32_t len)
 }
 
 
-uint32_t max_index(int16_t * array, uint32_t len)
+uint32_t max_index(int32_t * array, uint32_t len)
 {
 	uint32_t index = 0, max_index = 0;
 
@@ -48,4 +48,12 @@ int16_t * reverse(int16_t * array, uint32_t len)
 	}
 
 	return array;
+}
+
+
+void swap_ptr(void ** ptr_1, void ** ptr_2)
+{
+    void ** temp = *ptr_1;
+    *ptr_1 = *ptr_2;
+    *ptr_2 = temp;
 }
