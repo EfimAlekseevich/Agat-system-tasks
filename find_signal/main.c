@@ -38,17 +38,30 @@
 uint32_t fill_buffer(FILE * data_file, int16_t * buffer, uint32_t buffer_len)
 {
     uint32_t i = 0;
-    while (i < buffer_len && feof(data_file) == 0)
-            fscanf(data_file, "%hd", &buffer[i++]);
+    while (i < buffer_len && feof(data_file) == 0)  // пока не дошли до конца буффера или файла
+            fscanf(data_file, "%hd", &buffer[i++]); // считывает чило типа int16_t в буффер
     return i;
 }
 
+
+/*!
+Преобразует номер отсчёта в соответствуещее ему время
+\param[in] position номер отсчёта
+\return Момент времени в секндах
+*/
 
 double position_to_time(uint32_t position)
 {
     return (double)position / SAMPLING_FREQUENCY;
 }
 
+
+/*!
+Записывает в файл время отсчёта в секундах до 6 знака после точки
+\param[out] out_file Файл в который записывается момент времени
+\param[in] position Отсчёт, который необходимо преобразовать занести в файл
+\return Ничего
+*/
 
 void write_position(FILE * out_file, uint32_t position)
 {
@@ -57,17 +70,33 @@ void write_position(FILE * out_file, uint32_t position)
 }
 
 
+/*!
+Соединяет 1 массив + 2 массив в(=) третий массив
+\param[in] previous_buf Первый массив
+\param[in] actual_buf Второй массив
+\param[out] combuned_buf Третий массив
+\return Ничего
+*/
+
 void get_combined_buf(int16_t * previous_buf, int16_t * actual_buf, int16_t * combined_buf)
 {
-    memcpy(combined_buf, previous_buf, BUFFER_LEN*sizeof (int16_t));
-    memcpy(combined_buf+BUFFER_LEN, actual_buf, (BUFFER_LEN-1)*sizeof (int16_t));
+    memcpy(combined_buf, previous_buf, BUFFER_LEN*sizeof (int16_t));              // копируем первый массив
+    memcpy(combined_buf+BUFFER_LEN, actual_buf, (BUFFER_LEN-1)*sizeof (int16_t)); // копируем второй массив, без последнего элемента
 }
 
+
+/*!
+Находит индекс элемента с лучшим совпадением значения с автокорреляцией синхропоследовательностью
+\param[in] correlations Массив корреляций
+\param[in] len Длина массива корреляций
+\param[in] auto_corr Значение автокореляции синхропоследовательности
+\return Индекс элемента с лучшим совпадением
+*/
 
 uint16_t get_best_match_index(int32_t * correlations, uint16_t len, int32_t auto_corr)
 {
     uint16_t i, index = 0;
-    int32_t min_diff = abs(correlations[index] - auto_corr);
+    int32_t min_diff = abs(correlations[index] - auto_corr); // модуль разности корреляций
 
     for (i=1; i<len; i++)
         if (abs(correlations[i] - auto_corr) < min_diff)
@@ -75,7 +104,6 @@ uint16_t get_best_match_index(int32_t * correlations, uint16_t len, int32_t auto
             index = i;
             min_diff = abs(correlations[i] - auto_corr);
         }
-
     return index;
 }
 
@@ -118,29 +146,30 @@ int main()
     uint16_t sample = 0, index;
 
 
-    fill_buffer(data_file, previous_buf, BUFFER_LEN);
+    fill_buffer(data_file, previous_buf, BUFFER_LEN); // Заполняем буфер
 
-    while((filling = fill_buffer(data_file, actual_buf, BUFFER_LEN)) != 0)
+    while(filling = fill_buffer(data_file, actual_buf, BUFFER_LEN)) // загружаем буфер новыми значениями
     {
-        get_combined_buf(previous_buf, actual_buf, combined_buf);
-        get_absolute_correlations(combined_buf, sync, combined_buf_len-BUFFER_LEN+filling, sync_len, correlations);
+        get_combined_buf(previous_buf, actual_buf, combined_buf); // соединяем буфферы
+        get_absolute_correlations(combined_buf, sync, combined_buf_len-BUFFER_LEN+filling, sync_len, correlations); //находим корреляции
 
-        index = get_best_match_index(correlations, BUFFER_LEN-1, sync_auto_corr);
-        best_match = (double)correlations[index] / sync_auto_corr;
+        index = get_best_match_index(correlations, BUFFER_LEN-1, sync_auto_corr); // индекс элемента с лучшим совпадением
+        best_match = (double)correlations[index] / sync_auto_corr; // Значение корреляции
 
-        if (fabs(1-best_match) < sensivity_deviation)
-            write_position(out_file, BUFFER_LEN*sample+index);
+        if (fabs(1-best_match) < sensivity_deviation) // Можно ли считать это кадровой синхронизацией
+            write_position(out_file, BUFFER_LEN*sample+index); // Запись в файл отсчёта в секундах
 
-        sample++;
-        swap_ptr(&actual_buf, &previous_buf);
+        sample++; // Переход к следующему семплу.
+        swap_ptr(&actual_buf, &previous_buf); // Ракировка указателей
     }
-
+    // Закрываем файлы
     fclose(data_file);
     fclose(out_file);
+    // Освобождаем память
     free(correlations);
     free(actual_buf);
     free(previous_buf);
-
+    // Выводим инф-цию об успешном завершении программы
     printf("Succesful exit");
     return 0;
 }
