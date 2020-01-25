@@ -23,10 +23,9 @@
 #include "Efi_libs/Headers/dsp.h"
 
 #define SAMPLING_FREQUENCY 24000
-#define SAMPLING_PERIOD 0.005
 #define RESOLUTION_TYPE int16_t
 #define BUFFER_LEN 120
-#define MAX_DEVIATION 0.003
+#define MAX_DEVIATION 0.0035
 
 
 
@@ -99,24 +98,23 @@ uint32_t search_best_match(int32_t * correlations, uint32_t len, int32_t auto_co
 }
 
 
-void check_result()
+void check_result(uint32_t sync_len)
 {
     FILE * data_file = open_file("out.txt", "r");
     if (data_file == NULL) exit(1);
 
     uint32_t line = 0;
-    float previous_time, actual_time, diff;
+    float previous_time, actual_time, diff, sync_time = (float)sync_len / SAMPLING_FREQUENCY;
     fscanf(data_file, "%f", &previous_time);
 
 
     while (fscanf(data_file, "%f", &actual_time) != EOF)
     {
-
-        if ((actual_time - previous_time) < SAMPLING_PERIOD)
+        if ((actual_time - previous_time) < sync_time)
         {
             diff = actual_time - previous_time;
             printf("\r\n %f \r\n %f \r\n Difference %f so less then SAMPLING_PERIOD %.4f\r\n",
-                   previous_time, actual_time, diff, SAMPLING_PERIOD);
+                   previous_time, actual_time, diff, sync_time);
             printf("Warning. Line number %d. You need reduce MAX_DEVIATION(%f).\r\n", line, MAX_DEVIATION);
             break;
         }
@@ -181,6 +179,6 @@ int main()
     free(correlations);
     // Выводим инф-цию об успешном завершении программы
     printf("Succesful writing in out.txt\r\n");
-    check_result(); // Проверка результата
+    check_result(sync_len); // Проверка результата
     return 0;
 }
