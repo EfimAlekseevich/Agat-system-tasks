@@ -23,8 +23,11 @@
 #include "Efi_libs/Headers/dsp.h"
 
 #define SAMPLING_FREQUENCY 24000
+#define SAMPLING_PERIOD 0.005
 #define RESOLUTION_TYPE int16_t
 #define BUFFER_LEN 120
+#define MAX_DEVIATION 0.003
+
 
 
 /*!
@@ -75,7 +78,7 @@ double position_to_time(uint32_t position)
 void write_position(FILE * out_file, uint32_t position)
 {
     double time = position_to_time(position);
-    fprintf(out_file,"%.6f \n", time);
+    fprintf(out_file,"%.6f\n", time);
 }
 
 
@@ -87,20 +90,41 @@ void write_position(FILE * out_file, uint32_t position)
 \return Индекс элемента с лучшим совпадением
 */
 
-uint32_t get_best_match_index(int32_t * correlations, uint32_t len, int32_t auto_corr)
+uint32_t search_best_match(int32_t * correlations, uint32_t len, int32_t auto_corr)
 {
-    uint32_t i, index = 0;
-    int32_t min_diff = abs(correlations[index] - auto_corr); // модуль разности корреляций
-
-    for (i=1; i<len; i++)
-        if (abs(correlations[i] - auto_corr) < min_diff)
-        {
-            index = i;
-            min_diff = abs(correlations[i] - auto_corr);
-        }
-    return index;
+    uint32_t i = 0;
+    while ( ( i < len) && fabs(1 - (double)correlations[i]/auto_corr) > MAX_DEVIATION)
+        i++;
+    return i;
 }
 
+
+void check_result()
+{
+    FILE * data_file = open_file("out.txt", "r");
+    if (data_file == NULL) exit(1);
+
+    uint32_t line = 0;
+    float previous_time, actual_time, diff;
+    fscanf(data_file, "%f", &previous_time);
+
+
+    while (fscanf(data_file, "%f", &actual_time) != EOF)
+    {
+
+        if ((actual_time - previous_time) < SAMPLING_PERIOD)
+        {
+            diff = actual_time - previous_time;
+            printf("\r\n %f \r\n %f \r\n Difference %f so less then SAMPLING_PERIOD %.4f\r\n",
+                   previous_time, actual_time, diff, SAMPLING_PERIOD);
+            printf("Warning. Line number %d. You need reduce MAX_DEVIATION(%f).\r\n", line, MAX_DEVIATION);
+            break;
+        }
+        previous_time = actual_time;
+        line++;
+    }
+    fclose(data_file);
+}
 
 /*!
 Начальная основная функция
@@ -109,7 +133,6 @@ uint32_t get_best_match_index(int32_t * correlations, uint32_t len, int32_t auto
 
 int main()
 {
-    const float sensivity_deviation  = 0.02;  // Максимально допустимое отклонение.
 
     const int16_t sync[] = {
       -170,  -233,  -281,  -309,  -318,  -312,  -300,  -290,  -287,  -290,  -294,  -291,  -278,  -256,
@@ -123,7 +146,7 @@ int main()
        290,   300,   312,   318,   309,   281,   233,   170}; // Синхронизирующий сигнал
 
     uint32_t sync_len = sizeof (sync) / sizeof (int16_t);
-    int32_t sync_auto_corr = get_absolute_correlation(sync, sync, sync_len, 0);
+    int32_t sync_auto_corr = get_absolute_correlation(sync, sync, sync_len, 0) / sync_len;
 
     FILE * data_file = open_file("real_rec.txt", "r");
     if (data_file == NULL) exit(1);
@@ -135,7 +158,6 @@ int main()
     int32_t * correlations = (int32_t *)malloc(BUFFER_LEN*(sizeof (int32_t)));
     int16_t * buffer = (int16_t *)malloc(2*BUFFER_LEN*(sizeof (int16_t)));
 
-    double best_match;
     uint32_t filling;
     uint32_t index;
     int64_t sample = -1;
@@ -145,10 +167,8 @@ int main()
         filling = prepare_buffer(data_file, buffer, BUFFER_LEN); // вторую половину массива переносим в начала, и записываем туда новые значения
         get_absolute_correlations(buffer, sync, BUFFER_LEN+filling-1, sync_len, correlations); //находим корреляции
 
-        index = get_best_match_index(correlations, filling, sync_auto_corr); // индекс элемента с лучшим совпадением
-        best_match = (double)correlations[index] / sync_auto_corr; // Значение корреляции
-
-        if (fabs(1-best_match) < sensivity_deviation) // Можно ли считать это кадровой синхронизацией
+        index = search_best_match(correlations, --filling, sync_auto_corr); // индекс элемента
+        if (index != filling)
             write_position(out_file, BUFFER_LEN*sample+index); // Запись в файл отсчёта в секундах
 
         sample++; // Переход к следующему семплу.
@@ -160,6 +180,7 @@ int main()
     free(buffer);
     free(correlations);
     // Выводим инф-цию об успешном завершении программы
-    printf("Succesful exit");
+    printf("Succesful writing in out.txt\r\n");
+    check_result(); // Проверка результата
     return 0;
 }

@@ -5,12 +5,12 @@
 #include "Headers/std.h"
 
 
-int64_t get_absolute_correlation(const int16_t * long_s, const int16_t * short_s, uint32_t short_len, uint32_t shift)
+int32_t get_absolute_correlation(const int16_t * long_s, const int16_t * short_s, uint32_t short_len, uint32_t shift)
 {
-	int64_t corr = 0;
+    int32_t corr = 0;
 
 	for (uint32_t i = 0; i < short_len; i++)
-		corr += (int64_t)short_s[i] * long_s[i+shift];
+        corr += (int32_t)short_s[i] * long_s[i+shift];
 
 	return corr;
 }
@@ -21,7 +21,7 @@ void get_absolute_correlations(const int16_t * long_s, const int16_t * short_s, 
 	uint32_t shifts = long_len - short_len + 1;
 
 	for (uint32_t shift = 0; shift < shifts; shift++)
-        correlations[shift] = get_absolute_correlation(long_s, short_s, short_len, shift);
+        correlations[shift] = get_absolute_correlation(long_s, short_s, short_len, shift) / short_len;
 }
 
 
