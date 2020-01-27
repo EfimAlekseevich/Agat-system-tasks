@@ -16,7 +16,7 @@ int32_t get_absolute_correlation(const int16_t * long_s, const int16_t * short_s
 }
 
 
-void get_absolute_correlations(const int16_t * long_s, const int16_t * short_s, uint32_t long_len, uint32_t short_len, int32_t * correlations)
+void get_absolute_correlations(const int16_t * long_s, const int16_t * short_s, uint32_t long_len, uint32_t short_len, int16_t * correlations)
 {
 	uint32_t shifts = long_len - short_len + 1;
 

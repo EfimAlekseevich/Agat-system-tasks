@@ -19,4 +19,5 @@ HEADERS += \
     Efi_libs/Headers/utils.h
 
 DISTFILES += \
-    real_rec.txt
+    real_rec.txt \
+    vizualization.py
