@@ -16,10 +16,10 @@ int64_t randint(int64_t min, int64_t max)
 }
 
 
-void print_array(int16_t * array, uint32_t len)
+void print_array(int32_t * array, uint32_t len)
 {
 	for (uint32_t i = 0; i < len; i++)
-		printf("%d ", array[i]);
+        printf("%d ", array[i]);
 	printf("\n");
 }
 

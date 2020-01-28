@@ -25,7 +25,7 @@
 #define SAMPLING_FREQUENCY 24000
 #define RESOLUTION_TYPE int16_t
 #define BUFFER_LEN 120
-#define MAX_DEVIATION 0.0001
+#define MIN_GAIN 50
 
 
 
@@ -81,35 +81,30 @@ void write_position(FILE * out_file, uint32_t position)
 }
 
 
-double diff_normilize(int16_t value, int16_t denominator)
-{
-    return fabs(1.0 - (double)value/denominator);
-}
-
-
 /*!
-Находит индекс элемента с лучшим совпадением значения с автокорреляцией синхропоследовательностью
+Находит индекс элемента с наибольшим значением
 \param[in] correlations Массив корреляций
 \param[in] len Длина массива корреляций
 \param[in] auto_corr Значение автокореляции синхропоследовательности
 \return Индекс элемента с лучшим совпадением
 */
 
-uint32_t search_match_index(const int16_t * correlations, uint32_t len, int16_t sync_auto_corr)
+uint32_t get_max_index(int32_t * correlations, uint32_t len, int32_t sync_auto_corr)
 {
-    double diff, min_diff = MAX_DEVIATION;
-    uint32_t i, index = len;
+    uint32_t i, max_index = len;
+    int16_t norm, max_gain = MIN_GAIN;
 
-    for (i=0; i<len; i++)
+    for (i=0; i<len; ++i)
     {
-        diff = diff_normilize(correlations[i], sync_auto_corr);
-        if (diff < min_diff)
+        norm = correlations[i] / sync_auto_corr;
+        if (norm > max_gain)
         {
-            min_diff = diff;
-            index = i;
+            max_index = i;
+            max_gain = norm;
         }
     }
-    return index;
+
+    return max_index;
 }
 
 
@@ -130,7 +125,7 @@ void check_result(uint32_t sync_len)
             diff = actual_time - previous_time;
             printf("\r\n %f \r\n %f \r\n Difference %f so less then SAMPLING_PERIOD %.4f\r\n",
                    previous_time, actual_time, diff, sync_time);
-            printf("Warning. Line number %d. You need reduce MAX_DEVIATION(%lf).\r\n", line, MAX_DEVIATION);
+            printf("Warning. Line number %d.\r\n", line);
             break;
         }
         previous_time = actual_time;
@@ -148,17 +143,19 @@ int main()
 {
 
     int16_t sync[] = {
-      -170, -233, -281, -309, -318, -312, -300, -290, -287, -290, -294, -291, -278, -256, -235,
-      -228, -246, -290, -351, -406, -424, -384, -276, -115, 64, 218, 305, 301, 209, 56, -109, -234,
-      -281, -234, -109, 56, 208, 301, 305, 219, 64, -119, -288, -406, -455, -438, -375, -295, -226,
-      -190, -190, -222, -271, -319, -353, -363, -342, -288, -203, -90, 39, 170, 285, 369, 411, 409,
-       366, 287, 182, 62, -63, -179, -275, -343, -378, -379, -347, -287, -200, -93, 29, 157, 277,
-       374, 433, 440, 386, 275, 124, -39, -181, -271, -291, -237, -125, 20, 167, 289, 366, 392, 374,
-       329, 279, 242, 228, 236, 256, 277, 291, 294, 290, 287, 290, 300, 312, 318, 309, 281, 233, 170
+      170, 233, 281, 309, 318, 312, 300, 290, 287, 290, 294, 291, 277, 256, 236, 228, 242, 279,
+        329, 374, 392, 366, 289, 167, 20, -125, -237, -291, -271, -181, -39, 124, 275, 386, 440,
+        433, 374, 277, 157, 29, -93, -200, -287, -347, -379, -378, -343, -275, -179, -63, 62, 182,
+        287, 366, 409, 411, 369, 285, 170, 39, -90, -203, -288, -342, -363, -353, -319, -271, -222,
+        -190, -190, -226, -295, -375, -438, -455, -406, -288, -119, 64, 219, 305, 301, 208, 56, -109,
+        -234, -281, -234, -109, 56, 209, 301, 305, 218, 64, -115, -276, -384, -424, -406, -351, -290,
+        -246, -228, -235, -256, -278, -291, -294, -290, -287, -290, -300, -312, -318, -309, -281, -233,
+        -170
     }; // Синхронизирующий сигнал
 
     uint32_t sync_len = sizeof (sync) / sizeof (int16_t);
-    int16_t sync_auto_corr = get_absolute_correlation(sync, sync, sync_len, 0) / sync_len;
+    int32_t sync_auto_corr = get_absolute_correlation(sync, sync, sync_len, 0) / sync_len;
+
 
     FILE * data_file = open_file("real_rec.txt", "r");
     if (data_file == NULL) exit(1);
@@ -167,7 +164,7 @@ int main()
     if (out_file == NULL) fclose(data_file), exit(1);
 
 
-    int16_t * correlations = (int16_t *)malloc(BUFFER_LEN*(sizeof (int16_t)));
+    int32_t * correlations = (int32_t *)malloc(BUFFER_LEN*(sizeof (int32_t)));
     int16_t * buffer = (int16_t *)malloc(2*BUFFER_LEN*(sizeof (int16_t)));
 
     uint32_t filling;
@@ -180,8 +177,7 @@ int main()
     {
         filling = prepare_buffer(data_file, buffer, BUFFER_LEN); // вторую половину массива переносим в начала, и записываем туда новые значения
         get_absolute_correlations(buffer, sync, 2*BUFFER_LEN-1, sync_len, correlations); //находим корреляции
-
-        index = search_match_index(correlations, --filling, sync_auto_corr); // индекс элемента
+        index = get_max_index(correlations, --filling, sync_auto_corr); // индекс элемента
         if (index != filling)
             write_position(out_file, BUFFER_LEN*sample+index); // Запись в файл отсчёта в секундах
 
