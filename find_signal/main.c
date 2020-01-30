@@ -46,6 +46,14 @@ uint32_t fill_buffer(FILE * data_file, int16_t * buffer, uint32_t buffer_len)
 }
 
 
+/*!
+Вторую половину массива переносим в начало, а на её место записываем новые значения
+\param[in] data_file Указатель на файл с данными
+\param[out] buffer Буфер для загрузки данных
+\param[in] half_buffer_len Половина от длинны буфера
+\return Количество записанных элементов в буффер
+*/
+
 uint32_t prepare_buffer(FILE * data_file, int16_t * buffer, uint32_t half_buffer_len)
 {
     uint32_t i;
@@ -78,33 +86,6 @@ void write_position(FILE * out_file, uint32_t position)
 {
     double time = position_to_time(position);
     fprintf(out_file,"%.6f\n", time);
-}
-
-
-/*!
-Находит индекс элемента с наибольшим значением
-\param[in] correlations Массив корреляций
-\param[in] len Длина массива корреляций
-\param[in] auto_corr Значение автокореляции синхропоследовательности
-\return Индекс элемента с лучшим совпадением
-*/
-
-uint32_t get_max_index(int32_t * correlations, uint32_t len, int32_t sync_auto_corr)
-{
-    uint32_t i, max_index = len;
-    int16_t norm, max_gain = MIN_GAIN;
-
-    for (i=0; i<len; ++i)
-    {
-        norm = correlations[i] / sync_auto_corr;
-        if (norm > max_gain)
-        {
-            max_index = i;
-            max_gain = norm;
-        }
-    }
-
-    return max_index;
 }
 
 
@@ -175,10 +156,10 @@ int main()
 
     while(feof(data_file) == 0)
     {
-        filling = prepare_buffer(data_file, buffer, BUFFER_LEN); // вторую половину массива переносим в начала, и записываем туда новые значения
+        filling = prepare_buffer(data_file, buffer, BUFFER_LEN); // вторую половину массива переносим в начало, и записываем туда новые значения
         get_absolute_correlations(buffer, sync, 2*BUFFER_LEN-1, sync_len, correlations); //находим корреляции
-        index = get_max_index(correlations, --filling, sync_auto_corr); // индекс элемента
-        if (index != filling)
+        index = max_index(correlations, --filling); // индекс элемента
+        if (correlations[index] / sync_auto_corr > MIN_GAIN)
             write_position(out_file, BUFFER_LEN*sample+index); // Запись в файл отсчёта в секундах
 
         sample++; // Переход к следующему семплу.
